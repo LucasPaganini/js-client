@@ -7,6 +7,7 @@
  **************************************************************************/
 
 import { integrationTest, TEST_AUTH_TOKEN, TEST_BASE_API_CONTEXT, unitTest } from '~/tests';
+import { fetch } from '~/functions/utils';
 import { makeSubscribeToManySystemInformations } from './subscribe-to-many-system-informations';
 
 const wait = (n: number) => new Promise(resolve => setTimeout(resolve, n));
@@ -22,6 +23,7 @@ describe('subscribeToManySystemInformations()', () => {
 					host: 'www.example.com',
 					useEncryption: false,
 					authToken: TEST_AUTH_TOKEN,
+					fetch: fetch,
 				});
 			expect(fn).not.toThrow();
 			expect(typeof fn()).toBe('function');

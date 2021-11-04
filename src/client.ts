@@ -9,7 +9,7 @@
 import { isEqual, isUndefined } from 'lodash';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
-import { APIContext } from '~/functions/utils';
+import { APIContext, fetch } from '~/functions/utils';
 import {
 	ActionablesService,
 	AuthService,
@@ -82,6 +82,7 @@ import {
 export interface GravwellClientOptions {
 	useEncryption?: boolean;
 	authToken?: string;
+	fetch?: typeof fetch;
 }
 
 export class GravwellClient {
@@ -119,7 +120,7 @@ export class GravwellClient {
 		this.useEncryption$,
 		this.authToken$,
 	).pipe(
-		map(([host, useEncryption, authToken]) => ({ host, useEncryption, authToken })),
+		map(([host, useEncryption, authToken]) => ({ host, useEncryption, authToken, fetch: fetch })),
 		distinctUntilChanged((a, b) => isEqual(a, b)),
 		shareReplay(1),
 	);
@@ -150,6 +151,7 @@ export class GravwellClient {
 			host: this.host,
 			useEncryption: this.useEncryption,
 			authToken: this.authToken,
+			fetch: options.fetch || fetch,
 		};
 		this._tags = createTagsService(initialContext);
 		this._system = createSystemService(initialContext);
